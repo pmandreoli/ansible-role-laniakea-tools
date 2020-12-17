@@ -1,0 +1,55 @@
+
+
+#______________________________________
+# We clone here Galaxy-flavor-recipes in {{galaxy_tools_base_dir}}
+- name: 'Check if {{ galaxy_tools_base_dir }} exist'
+  stat:
+    path: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes'
+  register: tool_dir_path
+
+- name: 'Create {{ galaxy_tools_base_dir }}'
+  file:
+    path: '{{ galaxy_tools_base_dir }}'
+    state: directory
+  when: not tool_dir_path.stat.exists|bool
+  become_user: root
+  become_method: sudo
+
+- name: Get Galaxy flavor recipes
+  git:
+    repo: '{{ galaxy_flavors_recipes_url }}'
+    dest: '{{ galaxy_flavors_recipes_dir }}'
+    version: '{{ galaxy_flavors_recipes_tag }}'
+    clone: yes
+    force: yes
+  when: not tool_dir_path.stat.exists|bool
+  become_user: root
+  become_method: sudo
+
+- name: Include sources list
+  include: '{{ galaxy_flavors_recipes_dir }}/{{galaxy_flavor}}/{{galaxy_flavor}}-sources-list.yml'
+
+- debug:
+    msg: "{{ item }}"
+  with_items:
+   - 'workflow: {{ install_workflows }}'
+   - 'data: {{ install_data_libraries }}'
+
+- name: Template a file to /etc/file.conf
+  template:
+    src: laniakea_install_tools.sh.j2
+    dest: /home/galaxy/galaxy/server/laniakea_install_tools.sh
+    owner: galaxy
+    group: galaxy
+
+
+- name: install tools with ephemeris no nginx
+  become: true 
+  become_user: galaxy 
+  shell:
+    cmd: bash laniakea_install_tools.sh admin_key  "{{ tool_list_file }}"
+    chdir: /home/galaxy/galaxy/server/
+  with_items: '{{ galaxy_tools_tool_list_files }}'
+  loop_control:
+    loop_var: tool_list_file
+

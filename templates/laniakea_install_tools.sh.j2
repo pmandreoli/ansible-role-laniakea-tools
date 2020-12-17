@@ -1,9 +1,19 @@
 #!/bin/bash
 #assure postgres is running
 #stop galaxy and nginx in the laniakea installation
+#vars
+export PORT=8080
+export GALAXY_RUNSH_DIR=/home/galaxy/galaxy/server
+export GALAXY_ACTUAL_CONFIG_FILE=/home/galaxy/galaxy/config/galaxy.yml
+export GALAXY_CONFIG_FILE=/home/galaxy/galaxy/server/install_tools_galaxy.yml
+export GALAXY_VIRTUAL_ENV=/home/galaxy/galaxy/venv
+export DB_VERSION=10
+
+
 sudo systemctl stop galaxy;
 sudo systemctl stop nginx;
-touch /home/galaxy/galaxy/server/install_tools_galaxy.yml
+
+touch $GALAXY_RUNSH_DIR/install_tools_galaxy.yml;
 
 cat <<EOT >> install_tools_galaxy.yml
 uwsgi:
@@ -28,33 +38,28 @@ uwsgi:
     enable-threads: true
     umask: 027
 EOT
-awk '/galaxy:/,0' /home/galaxy/galaxy/config/galaxy.yml >> /home/galaxy/galaxy/server/install_tools_galaxy.yml;
+awk '/galaxy:/,0' $GALAXY_ACTUAL_CONFIG_FILE >> $GALAXY_RUNSH_DIR/install_tools_galaxy.yml;
 echo "the config file has been created";
-
-#source config/local_env.sh
-export GALAXY_CONFIG_FILE=/home/galaxy/galaxy/server/install_tools_galaxy.yml
-export GALAXY_VIRTUAL_ENV=/home/galaxy/galaxy/venv
 
 #activatgalaxy  env
 if [[ $(pgrep -u postgres -fa -- -D | wc -l) == 1 ]];then
 	echo "database is running procede with the process";
 else
 	echo "database not started yet, start it";
-	sudo systemctl start postgresql-10;
+	sudo systemctl start postgresql-$DB_VERSION;
 fi
 
 
 
 #start galaxy
 echo "starting galaxy";
-./run.sh start;
-. /home/galaxy/galaxy/venv/bin/activate;
-galaxy-wait -g http://localhost:8080 -v --timeout 120 &&
-
+$GALAXY_RUNSH_DIR/run.sh start;
+. $GALAXY_VIRTUAL_ENV/bin/activate;
+galaxy-wait -g http://localhost:$PORT -v --timeout 120 && 
 	#activate virtual env
-shed-tools install -g http://localhost:8080 -a $1 -t $2 && echo "all tools were installed";
+shed-tools install -g http://localhost:$PORT -a $1 -t $2 && echo "all tools were installed";
 
-
+#TODO control exit code for tools installation
 #exit_code=$?
 
 #if [ $exit_code != 0 ]; then

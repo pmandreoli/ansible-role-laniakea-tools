@@ -1,0 +1,37 @@
+
+- debug:
+    msg: "{{ item }}"
+  with_items:
+   - 'workflow: {{ install_workflows }}'
+   - 'data: {{ install_data_libraries }}'
+
+- name: Template a file to /etc/file.conf
+  template:
+    src: laniakea_install_tools.sh.j2
+    dest: /home/galaxy/galaxy/server/laniakea_install_tools.sh
+    owner: galaxy
+    group: galaxy
+
+
+- name: Install tools with ephemeris No NGINX running with custom script
+  become: true 
+  become_user: galaxy 
+  shell:
+    cmd: bash laniakea_install_tools.sh admin_key  "{{ tool_list_file }}"
+    chdir: /home/galaxy/galaxy/server/
+  with_items: '{{ galaxy_tools_tool_list_files }}'
+  loop_control:
+    loop_var: tool_list_file
+
+- name: Install workflows with NGINX running
+  become: true
+  become_user: galaxy
+  shell: 
+    cmd: . /home/galaxy/galaxy/venv/bin/activate;  galaxy-wait -g http://localhost:80 -v --timeout 120; workflow-install -a admin_key -w '{{ workflow_list_path }}' -g http://localhost:80 --publish_workflows
+    chdir: /home/galaxy/galaxy
+    executable: /bin/bash
+  with_items: '{{ galaxy_tools_workflow_list_path }}'
+  loop_control:
+    loop_var: workflow_list_path
+  when: install_workflows == true
+

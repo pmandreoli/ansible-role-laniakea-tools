@@ -1,0 +1,33 @@
+
+#______________________________________
+# We clone here Galaxy-flavor-recipes in {{galaxy_tools_base_dir}}
+
+- name: install dependencies
+  pip:
+    name:
+      - ephemeris
+    virtualenv: /home/galaxy/galaxy/venv 
+
+- name: 'Check if {{ galaxy_tools_base_dir }} exist'
+  stat:
+    path: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes'
+  register: tool_dir_path
+
+- name: 'Create {{ galaxy_tools_base_dir }}'
+  file:
+    path: '{{ galaxy_tools_base_dir }}'
+    state: directory
+  when: not tool_dir_path.stat.exists|bool
+  become_user: root
+  become_method: sudo
+
+- name: Get Galaxy Lanikea flavor recipes
+  git:
+    repo: '{{ galaxy_flavors_recipes_url }}'
+    dest: '{{ galaxy_flavors_recipes_dir }}'
+    version: '{{ galaxy_flavors_recipes_tag }}'
+    clone: yes
+    force: yes
+  when: not tool_dir_path.stat.exists|bool
+  become_user: root
+  become_method: sudo

@@ -7,7 +7,7 @@ galaxy_flavors_recipes_tag: 'master'
 # Please note that this key acts as an alternate means to access your account, and should be treated with the same care as your login password. To be changed by the administrator.
 galaxy_admin_api_key: "GALAXY_ADMIN_API_KEY"
 galaxy_tools_base_dir: /data
-galaxy_flavor: galaxy-CoVaCS
+galaxy_flavor: galaxy-testing
 install_workflows: false
 install_data_libraries: false
 

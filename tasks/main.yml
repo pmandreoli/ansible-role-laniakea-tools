@@ -5,7 +5,7 @@
   import_tasks: flavor-recipe-download.yml
 
 - name: import tasks that define tool lists and wf for every flavor
-  import_tasks: '{{ galaxy_flavors_recipes_dir }}/{{galaxy_flavor}}/{{galaxy_flavor}}-sources-list.yml'
+  include_tasks: '{{ galaxy_flavors_recipes_dir }}/{{galaxy_flavor}}/{{galaxy_flavor}}-sources-list.yml'
 
 - name: installation of tools and workflows
   import_tasks: tool-wf-install.yml

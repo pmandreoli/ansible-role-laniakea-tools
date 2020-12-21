@@ -1,7 +1,7 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+Role for the installation of tools and wf on laniakea galaxy instances.
 
 Requirements
 ------------

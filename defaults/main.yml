@@ -1,5 +1,5 @@
 ---
-# defaults file for ansible-role-tools
+# defaults file for ansible-role-laniakea-tools
 galaxy_flavors_recipes_url: 'https://github.com/indigo-dc/Galaxy-flavors-recipes.git'
 galaxy_flavors_recipes_dir: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes'
 galaxy_flavors_recipes_tag: 'master'

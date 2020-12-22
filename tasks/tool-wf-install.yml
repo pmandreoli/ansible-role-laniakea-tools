@@ -8,7 +8,7 @@
 - name: Template a file to /etc/file.conf
   template:
     src: laniakea_install_tools.sh.j2
-    dest: /home/galaxy/galaxy/server/laniakea_install_tools.sh
+    dest: "{{ galaxy_run_sh_dir }}/laniakea_install_tools.sh"
     owner: galaxy
     group: galaxy
 
@@ -17,8 +17,8 @@
   become: true 
   become_user: galaxy 
   shell:
-    cmd: bash laniakea_install_tools.sh admin_key  "{{ tool_list_file }}"
-    chdir: /home/galaxy/galaxy/server/
+    cmd: bash laniakea_install_tools.sh "{{ galaxy_admin_api_key }}"  "{{ tool_list_file }}"
+    chdir: "{{ galaxy_run_sh_dir}}"
   with_items: '{{ galaxy_tools_tool_list_files }}'
   loop_control:
     loop_var: tool_list_file
@@ -27,8 +27,7 @@
   become: true
   become_user: galaxy
   shell: 
-    cmd: . /home/galaxy/galaxy/venv/bin/activate;  galaxy-wait -g http://localhost:80 -v --timeout 120; workflow-install -a admin_key -w '{{ workflow_list_path }}' -g http://localhost:80 --publish_workflows
-    chdir: /home/galaxy/galaxy
+    cmd: . "{{ galaxy_virtual_env }}/bin/activate";  galaxy-wait -g http://localhost:80 -v --timeout 120; workflow-install -a "{{ galaxy_admin_api_key }}" -w '{{ workflow_list_path }}' -g http://localhost:80 --publish_workflows
     executable: /bin/bash
   with_items: '{{ galaxy_tools_workflow_list_path }}'
   loop_control:

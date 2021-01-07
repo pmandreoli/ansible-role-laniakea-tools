@@ -1,9 +1,4 @@
 
-- debug:
-    msg: "{{ item }}"
-  with_items:
-   - 'workflow: {{ install_workflows }}'
-   - 'data: {{ install_data_libraries }}'
 
 - name: Template a file to /etc/file.conf
   template:
@@ -12,22 +7,24 @@
     owner: galaxy
     group: galaxy
 
-
-- name: Install tools with ephemeris No NGINX running with custom script
+- name: Install flavor tools with ephemeris No NGINX running with custom script
   become: true 
   become_user: galaxy 
   shell:
-    cmd: bash laniakea_install_tools.sh "{{ galaxy_admin_api_key }}"  "{{ tool_list_file }}"
+    cmd: bash laniakea_install_tools.sh "{{ galaxy_admin_api_key }}"  "{{ item }}"
     chdir: "{{ galaxy_run_sh_dir}}"
-  with_items: '{{ galaxy_tools_list_files }}'
-  loop_control:
-    loop_var: tool_list_file
+  with_fileglob: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ galaxy_flavor }}/*tool-list*'
+
+- name: check workflow flavor existence
+  stat:
+    path: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ galaxy_flavor }}/{{ galaxy_flavor }}-workflows'
+  register: workflow
 
 - name: Install workflows with NGINX running
   become: true
   become_user: galaxy
   shell: 
-    cmd: . "{{ galaxy_virtual_env }}/bin/activate";  galaxy-wait -g http://localhost:80 -v --timeout 120; workflow-install -a "{{ galaxy_admin_api_key }}" -w '{{ galaxy_tools_workflow_list_path }}' -g http://localhost:80 --publish_workflows
+    cmd: . "{{ galaxy_virtual_env }}/bin/activate";  galaxy-wait -g http://localhost:80 -v --timeout 120; workflow-install -a "{{ galaxy_admin_api_key }}" -w '{{ workflow.stat.path }}/' -g http://localhost:80 --publish_workflows
     executable: /bin/bash
   when: workflow.stat.exists == True
 

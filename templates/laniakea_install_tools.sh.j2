@@ -9,7 +9,7 @@ export GALAXY_CONFIG_FILE="{{ galaxy_run_sh_dir }}/install_tools_galaxy.yml"
 export GALAXY_VIRTUAL_ENV="{{ galaxy_virtual_env }}"
 export DB_VERSION=10
 
-
+start_galaxy () {
 sudo systemctl stop galaxy;
 sudo systemctl stop nginx;
 
@@ -54,10 +54,14 @@ fi
 #start galaxy
 echo "starting galaxy";
 $GALAXY_RUNSH_DIR/run.sh start;
+}
+install_tools () {
 . $GALAXY_VIRTUAL_ENV/bin/activate;
 galaxy-wait -g http://localhost:$PORT -v --timeout 120 && 
 	#activate virtual env
 shed-tools install -g http://localhost:$PORT -a $1 -t $2 && echo "all tools were installed";
+
+}
 
 #TODO control exit code for tools installation
 #exit_code=$?
@@ -69,6 +73,7 @@ shed-tools install -g http://localhost:$PORT -a $1 -t $2 && echo "all tools were
 #echo "installation completed"
 #exit $exit_code
 #fi
+stop_galaxy () {
 echo  "killing galaxy";
 kill -9 `cat galaxy.pid`;
 # re-set old config file
@@ -78,3 +83,9 @@ kill -9 `cat galaxy.pid`;
 rm install_tools_galaxy.yml
 sudo systemctl start galaxy;
 sudo systemctl start nginx;
+}
+
+start_galaxy 
+install_tools
+stop_galaxy
+

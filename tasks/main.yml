@@ -4,8 +4,11 @@
 - name: flavor recipe directory creation and download
   import_tasks: flavor-recipe-download.yml
 
-- name: import tasks that define tool lists and wf for every flavor
-  include_tasks: '{{ galaxy_flavors_recipes_dir }}/{{galaxy_flavor}}/{{galaxy_flavor}}-sources-list.yml'
+- name: set tool lists and wf  
+  import_tasks: tool-wf-set.yml
+
+- name: systemd galaxy turn off
+  import_tasks: systemd-ga-off.yml
 
 - name: installation of tools and workflows
   import_tasks: tool-wf-install.yml

@@ -19,7 +19,7 @@
   shell:
     cmd: bash laniakea_install_tools.sh "{{ galaxy_admin_api_key }}"  "{{ tool_list_file }}"
     chdir: "{{ galaxy_run_sh_dir}}"
-  with_items: '{{ galaxy_tools_tool_list_files }}'
+  with_items: '{{ galaxy_tools_list_files }}'
   loop_control:
     loop_var: tool_list_file
 

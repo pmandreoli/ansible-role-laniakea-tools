@@ -1,0 +1,7 @@
+
+- name: Stop galaxy if running
+  systemd:
+    name: galaxy
+    state: stopped
+#TODO
+#add specific for zerg

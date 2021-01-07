@@ -1,0 +1,16 @@
+--- 
+
+- name: task that substitute the sources-lists
+  set_fact:
+    galaxy_tools_list_files: '{{ item }}' 
+  with_fileglob: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ galaxy_flavor }}/*tool-list*'
+
+- name: check workflow path existence
+  stat:
+    path: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ galaxy_flavor }}/{{ galaxy_flavor }}-workflows'
+  register: workflow
+
+- name: set workflow variable if it exists
+  set_fact: 
+    galaxy_tools_workflow_list_path: '{{ workflow.stat.path }}/'
+  when: workflow.stat.exists == True

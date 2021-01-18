@@ -13,11 +13,11 @@
   shell:
     cmd: bash laniakea_install_tools.sh "{{ galaxy_admin_api_key }}"  "{{ item }}"
     chdir: "{{ galaxy_run_sh_dir}}"
-  with_fileglob: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ galaxy_flavor }}/*tool-list*'
+  with_fileglob: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ laniakea_galaxy_flavor }}/*tool-list*'
 
 - name: check workflow flavor existence
   stat:
-    path: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ galaxy_flavor }}/{{ galaxy_flavor }}-workflows'
+    path: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ laniakea_galaxy_flavor }}/{{ laniakea_galaxy_flavor }}-workflows'
   register: workflow
 
 - name: Install workflows with NGINX running

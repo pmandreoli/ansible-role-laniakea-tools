@@ -9,7 +9,7 @@ galaxy_admin_api_key: "{{ GALAXY_ADMIN_API_KEY }}"
 
 galaxy_tools_base_dir: /data
 
-galaxy_flavor: galaxy-vinyl
+laniakea_galaxy_flavor: galaxy-vinyl
 
 install_workflows: false
 

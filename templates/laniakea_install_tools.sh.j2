@@ -39,7 +39,7 @@ uwsgi:
     umask: 027
 EOT
 awk '/galaxy:/,0' $GALAXY_ACTUAL_CONFIG_FILE >> $GALAXY_RUNSH_DIR/install_tools_galaxy.yml;
-echo "the config file has been created";
+ echo "the config file has been created";
 
 #activatgalaxy  env
 if [[ $(pgrep -u postgres -fa -- -D | wc -l) == 1 ]];then
@@ -59,7 +59,7 @@ install_tools () {
 . $GALAXY_VIRTUAL_ENV/bin/activate;
 galaxy-wait -g http://localhost:$PORT -v --timeout 120 && 
 	#activate virtual env
-shed-tools install -g http://localhost:$PORT -a $1 -t $2 && echo "all tools were installed";
+shed-tools install -g http://localhost:$PORT -a $2 -t $3 && echo "all tools were installed";
 
 }
 
@@ -85,7 +85,10 @@ sudo systemctl start galaxy;
 sudo systemctl start nginx;
 }
 
+if [ $1 == "start" ]; then 
 start_galaxy 
-install_tools $1 $2
+elif [ $1 == "install" ]; then
+install_tools $2 $3
+elif [ $1 == "stop" ]; then
 stop_galaxy
-
+fi

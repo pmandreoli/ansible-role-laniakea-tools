@@ -7,13 +7,37 @@
     owner: galaxy
     group: galaxy
 
+- name: start galaxy not nginx
+  become: true 
+  become_user: galaxy 
+  shell:
+    cmd: bash laniakea_install_tools.sh start "{{ galaxy_admin_api_key }}"  "{{ item }}"
+    chdir: "{{ galaxy_run_sh_dir}}"
+
 - name: Install flavor tools with ephemeris No NGINX running with custom script
   become: true 
   become_user: galaxy 
   shell:
-    cmd: bash laniakea_install_tools.sh "{{ galaxy_admin_api_key }}"  "{{ item }}"
+    cmd: bash laniakea_install_tools.sh install "{{ galaxy_admin_api_key }}"  "{{ item }}"
     chdir: "{{ galaxy_run_sh_dir}}"
   with_fileglob: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ laniakea_galaxy_flavor }}/*tool-list*'
+  ignore_errors: true
+
+- name: Install flavor tools with ephemeris No NGINX running with custom script
+  become: true 
+  become_user: galaxy 
+  shell:
+    cmd: bash laniakea_install_tools.sh install "{{ galaxy_admin_api_key }}"  "{{ item }}"
+    chdir: "{{ galaxy_run_sh_dir}}"
+  with_fileglob: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ laniakea_galaxy_flavor }}/*tool-list*'
+
+- name: stop galaxy not nginx
+  become: true 
+  become_user: galaxy 
+  shell:
+    cmd: bash laniakea_install_tools.sh stop "{{ galaxy_admin_api_key }}"  "{{ item }}"
+    chdir: "{{ galaxy_run_sh_dir}}"
+
 
 - name: check workflow flavor existence
   stat:

@@ -1,4 +1,4 @@
-
+---
 
 - name: Template a file to /etc/file.conf
   template:
@@ -15,25 +15,24 @@
     chdir: "{{ galaxy_run_sh_dir}}"
   ignore_errors: true
 
-- name: Install flavor tools with ephemeris No NGINX running with custom script
+- name: Install flavor tools with ephemeris No NGINX running with custom script no errors
   become: true 
   become_user: galaxy 
   shell:
     cmd: bash laniakea_install_tools.sh install "{{ galaxy_admin_api_key }}"  "{{ item }}"
     chdir: "{{ galaxy_run_sh_dir}}"
   with_fileglob: 
-    - '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ laniakea_galaxy_flavor }}/*tool-list*'
+    - '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ laniakea_galaxy_flavor }}/*.yml'
   ignore_errors: true
 
-- name: Install flavor tools with ephemeris No NGINX running with custom script
+- name: Install flavor tools with ephemeris No NGINX running with custom script 
   become: true 
   become_user: galaxy 
   shell:
     cmd: bash laniakea_install_tools.sh install "{{ galaxy_admin_api_key }}"  "{{ item }}"
     chdir: "{{ galaxy_run_sh_dir}}"
   with_fileglob: 
-    - '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ laniakea_galaxy_flavor }}/*tool-list*.yml'
-  ignore_errors: true
+    - '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ laniakea_galaxy_flavor }}/*.yml'
 
 - name: stop galaxy not nginx
   become: true 
@@ -43,11 +42,10 @@
     chdir: "{{ galaxy_run_sh_dir}}"
   ignore_errors: true
 
-
 - name: check workflow flavor existence
   stat:
-    path: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ laniakea_galaxy_flavor }}/{{ laniakea_galaxy_flavor }}-workflows'
-  register: workflow
+    path: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes/{{ laniakea_galaxy_flavor }}/workflows'
+  register: workflows 
 
 - name: Install workflows with NGINX running
   become: true
@@ -55,5 +53,5 @@
   shell: 
     cmd: . "{{ galaxy_virtual_env }}/bin/activate";  galaxy-wait -g http://localhost:80 -v --timeout 120; workflow-install -a "{{ galaxy_admin_api_key }}" -w '{{ workflow.stat.path }}/' -g http://localhost:80 --publish_workflows
     executable: /bin/bash
-  when: workflow.stat.exists == True
+  when: workflows.stat.exists == True
 

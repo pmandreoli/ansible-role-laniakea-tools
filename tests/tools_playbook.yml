@@ -1,0 +1,8 @@
+- hosts: galaxyservers
+  become: true
+  vars:
+    laniakea_galaxy_flavor: "galaxy-testing"
+    galaxy_admin_api_key: "admin_key"
+    role_debug: true
+  roles:
+    - ansible-role-laniakea-tools

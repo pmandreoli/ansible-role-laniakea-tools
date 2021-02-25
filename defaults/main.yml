@@ -14,7 +14,7 @@ galaxy_admin_api_key: "{{ GALAXY_ADMIN_API_KEY }}"
 
 galaxy_tools_base_dir: /data
 
-laniakea_galaxy_flavor: galaxy-vinyl
+laniakea_galaxy_flavor: galaxy-testing
 
 install_workflows: false
 
@@ -23,3 +23,5 @@ galaxy_run_sh_dir: /home/galaxy/galaxy/server
 galaxy_virtual_env: /home/galaxy/galaxy/venv
 
 galaxy_config_file: /home/galaxy/galaxy/config/galaxy.yml
+
+role_debug: false

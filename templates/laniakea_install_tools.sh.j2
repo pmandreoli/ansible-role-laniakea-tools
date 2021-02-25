@@ -79,13 +79,11 @@ shed-tools install -g http://localhost:$PORT -a $2 -t $3 --log_file install_tool
 #fi
 
 stop_galaxy () {
-echo  "killing galaxy";
-kill -9 `cat $GALAXY_PID`;
-# re-set old config file
-#export GALAXY_CONFIG_FILE=/home/galaxy/galaxy/config/galaxy.yml;
-#resta
-# remove config file
-rm install_tools_galaxy.yml;
+echo  "stopping galaxy";
+$GALAXY_RUNSH_DIR/run.sh stop;
+#kill -9 `cat $GALAXY_PID`;
+#remove config file pid and log file
+rm $GALAXY_PID $GALAXY_LOG;
 sudo systemctl start galaxy;
 sudo systemctl start nginx;
 

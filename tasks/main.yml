@@ -10,7 +10,3 @@
 - name: installation of tools and workflows
   import_tasks: tool-wf-install.yml
 
-#todo
-#turn off GA before
-#tool installation process --> 3 times
-#change template in order to install all the tool-list without galaxy restart every tool-list

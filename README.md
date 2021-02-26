@@ -1,38 +1,65 @@
-Role Name
+ansible-role-laniakea-tools
 =========
 
-Role for the installation of tools and wf on laniakea galaxy instances.
+Role for the installation of flavor's tools and workflows on laniakea galaxy instances.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+python3 pip3 libselinux-python3
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+``galaxy_flavors_recipes_url:``github repository containing flavor recipes default: ``https://github.com/pmandreoli/Galaxy-flavors-recipes.git``
+
+``galaxy_flavors_recipes_tag:`` repository branch name (default ``test``)
+
+``galaxy_admin_api_key:`` galaxy istance admin api_key (default:``"{{ GALAXY_ADMIN_API_KEY }}"``)
+
+``galaxy_tools_base_dir:`` directory used to store galaxy flavors recipes (default: ``/data``)
+
+``galaxy_flavors_recipes_dir:``  directory to clone the repo in (default: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes')
+
+``laniakea_galaxy_flavor:`` galaxy-testing galaxy flavor to install (default: ``galaxy-testing``)
+
+``galaxy_run_sh_dir:``  galaxy dir that contain run.sh script (default: ``/home/galaxy/galaxy/server``)
+
+``galaxy_virtual_env:`` path to galaxy virtualenv (default: ``/home/galaxy/galaxy/venv``)
+
+``galaxy_config_file:``  path to galaxy config file (default:``/home/galaxy/galaxy/config/galaxy.yml``)
+
+``role_debug:`` bool debug variable (default: ``false``)
+
 
 Dependencies
 ------------
-called by ansible-role-laniakea-galaxy
+
+role ansible-role-laniakea-galaxy
 
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+--- 
+- hosts: galaxyservers
+  become: true
+  vars:
+    laniakea_galaxy_flavor: "galaxy-testing"
+    galaxy_admin_api_key: "admin_key"
+    role_debug: true
+  roles:
+    - ansible-role-laniakea-tools
+```
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Pietro Mandreoli
+email: pietro.mandreoli@unimi.it

@@ -2,8 +2,13 @@
 #______________________________________________
 # defaults file for ansible-role-laniakea-tools
 
+#github repository containing flavor recipes
 galaxy_flavors_recipes_url: 'https://github.com/pmandreoli/Galaxy-flavors-recipes.git'
+
+#directory to clone it in
 galaxy_flavors_recipes_dir: '{{ galaxy_tools_base_dir }}/Galaxy-flavors-recipes'
+
+#repos branch
 galaxy_flavors_recipes_tag: 'test'
 
 #______________________________________________
@@ -12,16 +17,20 @@ galaxy_flavors_recipes_tag: 'test'
 
 galaxy_admin_api_key: "{{ GALAXY_ADMIN_API_KEY }}"
 
+#directory used to store galaxy flavors recipes
 galaxy_tools_base_dir: /data
 
+#laniakea galaxy flavor
 laniakea_galaxy_flavor: galaxy-testing
 
-install_workflows: false
-
+#galaxy dir that contain run.sh script
 galaxy_run_sh_dir: /home/galaxy/galaxy/server 
 
+#path to galaxy virtualenv
 galaxy_virtual_env: /home/galaxy/galaxy/venv
 
+#path to galaxy config file
 galaxy_config_file: /home/galaxy/galaxy/config/galaxy.yml
 
+#debug variable
 role_debug: false

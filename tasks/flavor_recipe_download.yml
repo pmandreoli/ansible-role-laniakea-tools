@@ -2,11 +2,11 @@
 #______________________________________
 # We clone here Galaxy-flavor-recipes in {{galaxy_tools_base_dir}}
 
-- name: install dependencies
+- name: install ephemeris on virtualenv
   pip:
     name:
       - ephemeris
-    virtualenv: /home/galaxy/galaxy/venv 
+    virtualenv: '{{ galaxy_virtual_env }}' 
 
 - name: 'Check if {{ galaxy_tools_base_dir }} exist'
   stat:

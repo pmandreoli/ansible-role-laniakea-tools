@@ -62,4 +62,4 @@
   shell: 
     cmd: . "{{ galaxy_virtual_env }}/bin/activate";  galaxy-wait -g http://localhost:80 -v --timeout 120; workflow-install -a "{{ galaxy_admin_api_key }}" -w '{{ workflows.stat.path }}/' -g http://localhost:80 --publish_workflows
     executable: /bin/bash
-  when: workflows.stat.exists == True
+  when: workflows.stat.exists

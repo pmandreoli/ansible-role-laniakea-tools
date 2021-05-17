@@ -7,6 +7,7 @@
     name:
       - ephemeris
     virtualenv: '{{ galaxy_virtual_env }}' 
+  when: install_ephemeris == True
 
 - name: 'Check if {{ galaxy_tools_base_dir }} exist'
   stat:

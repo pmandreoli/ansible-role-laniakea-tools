@@ -1,8 +1,10 @@
 - hosts: galaxyservers
   become: true
   vars:
-    laniakea_galaxy_flavor: "galaxy-testing"
-    galaxy_admin_api_key: "admin_key"
-    role_debug: true
+    laniakea_galaxy_flavor: "galaxy-CoVaCS"
+    galaxy_admin_api_key: "GALAXY_ADMIN_API_KEY"
+    role_debug: false
+    galaxy_run_sh_dir: /home/galaxy/galaxy/server
+    install_ephemeris: False
   roles:
-    - ansible-role-laniakea-tools
+    - ../../ansible-role-laniakea-tools

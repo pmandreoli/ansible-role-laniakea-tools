@@ -32,3 +32,6 @@ galaxy_config_file: /home/galaxy/galaxy/config/galaxy.yml
 
 #debug variable
 role_debug: false
+
+##install ephemeris
+install_ephemeris: True

@@ -3,6 +3,8 @@
 # We clone here Galaxy-flavor-recipes in {{galaxy_tools_base_dir}}
 
 - name: install ephemeris on virtualenv
+  become: true
+  become_user: galaxy
   pip:
     name:
       - ephemeris
